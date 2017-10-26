@@ -1,5 +1,6 @@
 package com.names.horrible.dinonotes;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -54,5 +55,42 @@ public class DynamicNoteDataStore {
             onUpgrade(db, oldVersion, newVersion);
         }
     }
-    
+    public class DynamicNoteExample{
+        public final String[][] EXAMPLE_NOTES = {
+                //id, tree, title, body, parent list, child list
+                {"0", "Example Tree", "Example Root", "Example Body", "", "1\n"},
+                {"1", "Example Tree", "Example Node 1", "Example Body 1", "0", "2\n3\n"},
+                {"2", "Example Tree", "Example Node 2", "Example Body 2", "1\n", "3\n4\n"},
+                {"3", "Example Tree", "Example Node 3", "Example Body 3", "1\n", "4\n"},
+                {"4", "Example Tree", "Example Node 4", "Example Body 4", "2\n3\n", ""}
+        };
+        public Context context;
+        public DynamicNoteReaderHelper rh;
+        public SQLiteDatabase db;
+        public void SQLitePutExample(){
+            ContentValues contentValues = new ContentValues();
+            long rowIds = 0;
+            for(int i = 0; i < 5; i++){
+                contentValues.put(DinoDBReaderContract.DynamicNoteNote.COLUMN_NAME_ROOT_NAME,
+                        EXAMPLE_NOTES[i][0]);
+                contentValues.put(DinoDBReaderContract.DynamicNoteNote.COLUMN_NAME_TITLE,
+                        EXAMPLE_NOTES[i][1]);
+                contentValues.put(DinoDBReaderContract.DynamicNoteNote.COLUMN_NAME_BODY,
+                        EXAMPLE_NOTES[i][2]);
+                contentValues.put(DinoDBReaderContract.DynamicNoteNote.COLUMN_NAME_PARENT_LIST,
+                        EXAMPLE_NOTES[i][3]);
+                contentValues.put(DinoDBReaderContract.DynamicNoteNote.COLUMN_NAME_CHILD_LIST,
+                        EXAMPLE_NOTES[i][4]);
+
+                rowIds = db.insert(DinoDBReaderContract.DynamicNoteNote.TABLE_NAME,
+                        null,
+                        contentValues);
+            }
+        }
+        public DynamicNoteExample(Context pContext){
+            context = pContext;
+            rh = new DynamicNoteReaderHelper(context);
+            db = rh.getWritableDatabase();
+        }
+    }
 }
