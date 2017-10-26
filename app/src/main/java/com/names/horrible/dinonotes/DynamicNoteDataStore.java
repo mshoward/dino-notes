@@ -1,5 +1,7 @@
 package com.names.horrible.dinonotes;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
@@ -8,6 +10,7 @@ import android.provider.BaseColumns;
  */
 
 public class DynamicNoteDataStore {
+    private DynamicNoteDataStore(){}
     public static final class DinoDBReaderContract{
         private DinoDBReaderContract(){}
         public static class DynamicNoteNote implements BaseColumns{
@@ -29,7 +32,27 @@ public class DynamicNoteDataStore {
         public static final String SQL_DELETE_NOTE =
                 "DROP TABLE IF EXISTS " + DynamicNoteNote.TABLE_NAME;
     }
-    public static final String DATABASE_NAME = "DYNAMIC_NOTE_DB";
 
-    public SQLiteOpenHelper sqLiteOpenHelper;
+
+    public class DynamicNoteReaderHelper extends SQLiteOpenHelper{
+        public static final int DATABASE_VERSION = 1;
+        public static final String DATABASE_NAME = "DYNAMIC_NOTE_DB.db";
+
+        public DynamicNoteReaderHelper(Context context){
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+        public void onCreate(SQLiteDatabase db){
+            db.execSQL(DinoDBReaderContract.SQL_CREATE_NOTE);
+        }
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            //// TODO: 10/26/17 add a database method that doesn't wipe data
+            db.execSQL(DinoDBReaderContract.SQL_DELETE_NOTE);
+            onCreate(db);
+        }
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // TODO: 10/26/17 technically this will do it.
+            onUpgrade(db, oldVersion, newVersion);
+        }
+    }
+    
 }
