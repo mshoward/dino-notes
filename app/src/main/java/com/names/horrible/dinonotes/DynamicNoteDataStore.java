@@ -85,8 +85,16 @@ public class DynamicNoteDataStore {
                         contentValues);
             }
         }
+        /**
+         * TODO: 10/26/17 data-store functionality needed:
+         *  - give list of trees in db in String[]
+         *  - give list of questions in tree in db in ArrayList<DynamicNoteData>
+         *  - give all questions in db in ArrayList<DynamicNoteData>
+         *  - accept new DynamicNoteNode, transform into DynamicNoteData, put in db
+         *  - edit DynamicNoteNote entries
+        **/
 
-        
+
     }
     public class DynamicNoteExample{
         public final String[][] EXAMPLE_NOTES = {
